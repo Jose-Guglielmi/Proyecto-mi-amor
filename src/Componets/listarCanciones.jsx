@@ -9,7 +9,7 @@ export const ListarCanciones = () => {
 
   return (
     <div className="bg-gray-700 h-screen flex flex-col items-center p-5 relative">
-      <p className="font-extrabold text-4xl text-white mb-4">Canciones</p>
+      <p className="font-extrabold text-4xl text-white mb-4">Favoritos</p>
 
       <div className="w-full overflow-auto">
         {Canciones.canciones.map((cancion, index) => (
