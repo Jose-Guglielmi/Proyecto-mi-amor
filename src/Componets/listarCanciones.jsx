@@ -8,22 +8,24 @@ export const ListarCanciones = () => {
   const [cancionIndex, setCancionIndex] = useState(0);
 
   return (
-    <div className="bg-gray-700 h-screen flex flex-col items-center p-5 relative">
-      <p className="font-extrabold text-4xl text-white mb-4">Favoritos</p>
+    <div className="bg-rose-50 h-screen flex flex-col items-center justify-center">
+      <p className="font-extrabold text-4xl text-rose-700 mb-4 text-center">
+        Canciones Favoritas
+      </p>
 
       <div className="w-full overflow-auto">
         {Canciones.canciones.map((cancion, index) => (
           <div
             key={index}
-            className="backdrop-blur-lg bg-white/10 p-4 rounded-lg shadow-lg mb-4 w-full flex flex-row justify-between items-center cursor-pointer hover:bg-white/20 transition-colors"
+            className="backdrop-blur-lg bg-white p-4 rounded-lg shadow-lg mb-4 w-full flex flex-row justify-between items-center cursor-pointer hover:bg-white/20 transition-colors"
             onClick={() => {
-              setActivo(true);
               setCancionIndex(index);
+              setActivo(true);
             }}
           >
             <div className="flex flex-col">
-              <p className="text-white">{cancion.titulo}</p>
-              <p className="text-white">{cancion.artista}</p>
+              <p className="text-rose-800">{cancion.titulo}</p>
+              <p className="text-rose-600">{cancion.artista}</p>
             </div>
             <Play color="#ffff" />
           </div>
@@ -34,7 +36,7 @@ export const ListarCanciones = () => {
         <Reproductor
           canciones={Canciones.canciones}
           setActivo={setActivo}
-          currentSongIndex={cancionIndex}
+          initialSongIndex={cancionIndex}
         />
       )}
     </div>

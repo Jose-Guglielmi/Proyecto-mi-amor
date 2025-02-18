@@ -1,5 +1,5 @@
 import { Play, ChevronLeft, SkipBack, SkipForward, Pause } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Slider2 from "./Slider2";
 
 export const Reproductor = ({
@@ -12,6 +12,26 @@ export const Reproductor = ({
   const [duration, setDuration] = useState(0);
   const [songIndex, setSongIndex] = useState(initialSongIndex);
   const audioRef = useRef(null);
+
+  // Sincroniza el índice cuando cambia la prop
+  useEffect(() => {
+    setSongIndex(initialSongIndex);
+  }, [initialSongIndex]);
+
+  // Efecto para reproducir automáticamente cuando se monta el componente o cambia la canción
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error("Error al reproducir:", error);
+          setIsPlaying(false);
+        });
+    }
+  }, [songIndex]);
 
   // Obtener la canción actual
   const cancionActual = canciones[songIndex];
@@ -43,7 +63,6 @@ export const Reproductor = ({
       setSongIndex((prev) => prev + 1);
       setIsPlaying(false);
       setCurrentTime(0);
-      setTimeout(playAudio, 100);
     }
   };
 
@@ -52,7 +71,6 @@ export const Reproductor = ({
       setSongIndex((prev) => prev - 1);
       setIsPlaying(false);
       setCurrentTime(0);
-      setTimeout(playAudio, 100);
     }
   };
 
@@ -71,24 +89,24 @@ export const Reproductor = ({
   };
 
   return (
-    <div className="bg-white/10 rounded-lg h-[96%] w-[90%] absolute backdrop-blur-lg">
+    <div className="bg-white/5 rounded-lg h-[97%] fixed inset-0 m-auto backdrop-blur-lg w-[95%] max-w-2xl">
       <div className="flex justify-center relative h-full">
         <div className="absolute left-0">
           <ChevronLeft
             size={50}
-            color="#ffff"
+            color="#000000"
             onClick={() => {
               setActivo(false);
             }}
           />
         </div>
         <div className="flex flex-col h-full w-full items-center">
-          <div className="flex mt-5 items-center flex-col">
-            <p className="text-white font-bold text-xl">
+          <div className="flex mt-2 items-center flex-col">
+            <p className="text-black font-bold text-3xl">
               {cancionActual?.titulo}
             </p>
             <br />
-            <p className="text-gray-200 font-bold text-center p-3">
+            <p className="text-black font-bold text-2xl text-center ">
               {cancionActual?.artista}
             </p>
           </div>
@@ -98,8 +116,8 @@ export const Reproductor = ({
               backgroundImage: `url("${cancionActual?.imagen}")`,
             }}
           />
-          <div className="bg-white/10 rounded-lg h-70 w-[90%] backdrop-blur-lg mt-10 overflow-auto">
-            <pre className="text-gray-200 font-black text-sm text-center p-2">
+          <div className="bg-black/5 rounded-lg h-70 w-[90%] backdrop-blur-lg mt-10 overflow-auto mb-10">
+            <pre className="text-black font-black text-sm text-center p-2 break-words whitespace-pre-wrap">
               {cancionActual?.letra}
             </pre>
           </div>
@@ -108,27 +126,28 @@ export const Reproductor = ({
             duration={duration}
             onTimeChange={handleSliderChange}
           />
-          <div className="flex mt-5">
+          <div className="flex mt-7">
             <SkipBack
-              color="#ffff"
+              color="#000000"
               size={50}
               className="mr-4 cursor-pointer"
               onClick={playPreviousSong}
             />
             <div onClick={togglePlay} className="cursor-pointer mr-4">
               {isPlaying ? (
-                <Pause color="#ffff" size={50} />
+                <Pause color="#000000" size={50} />
               ) : (
-                <Play color="#ffff" size={50} />
+                <Play color="#000000" size={50} />
               )}
             </div>
             <SkipForward
-              color="#ffff"
+              color="#000000"
               size={50}
               className="cursor-pointer"
               onClick={playNextSong}
             />
             <audio
+              key={cancionActual?.url}
               ref={audioRef}
               src={cancionActual?.url}
               onTimeUpdate={handleTimeUpdate}
